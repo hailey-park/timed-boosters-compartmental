@@ -40,7 +40,7 @@ score <- function (sim_pred, data) {
 }
 
 
-# The likelihood is the negative log score of the average simulated incidence.
+# The likelihood is the negative log SSE scores.
 likelihood <- function (params) {
   
   #Parameters
@@ -123,24 +123,27 @@ proposalfunction <- function(param){
 }
 
 run_metropolis_MCMC <- function(startvalue, iterations){
-  chain = array(dim = c(iterations+1,8))
-  chain[1,] = startvalue
+  chain = array(dim = c(iterations+1,9))
+  chain[1,] = c(startvalue, posterior(proposalfunction(startvalue)))
   print(startvalue)
   for (i in 1:iterations){
-    proposal = proposalfunction(chain[i,])
+    proposal = proposalfunction(chain[i,1:8])
     print("Proposal: ")
     print(proposal)
     
-    probab = exp(posterior(proposal) - posterior(chain[i,]))
+    probab = exp(posterior(proposal) - posterior(chain[i,1:8]))
     random_probab <- runif(1)
     
     # print(paste0("Probability: ", probab))
     # print(paste0("Random prob: ", random_probab))
     
     if (random_probab < probab){
-      chain[i+1,] <- proposal
+      chain[i+1,1:8] <- proposal
+      chain[i+1,9] <- posterior(proposal)
+      
     }else{
-      chain[i+1,] <- chain[i,]
+      chain[i+1,1:8] <- chain[i, 1:8]
+      chain[i+1,9] <- posterior(chain[i, 1:8])
     }
     
     print(paste0("Iteration ", i, " Chain: "))

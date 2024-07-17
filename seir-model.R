@@ -85,7 +85,6 @@ seir_model = function (current_timepoint, state_values, parameters)
   with ( 
     as.list (parameters),     # variable names within parameters can be used 
     {
-      
       #total infections include nonsevere and severe infections
       total_inf <- I_0 + I_V_1 + I_V_2 + I_V_3 + I_V_4 + I_1 + I_2 + I_3 + I_4 + H_0 + H_V_1 + H_V_2 + H_V_3 + H_V_4 + H_1 + H_2 + H_3 + H_4
       
