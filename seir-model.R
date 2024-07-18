@@ -182,7 +182,7 @@ seir_model = function (current_timepoint, state_values, parameters)
       dI_4 <- (delta * E_4 * (1 - severity_4)) - (gamma * I_4)
       dH_4 <- (delta * E_4 * severity_4) - (gamma * H_4)   
       
-      dR <- (gamma * (contact_matrix_clean %*% as.matrix(total_inf/pop_count)) * contact_matrix_adj) - (waning_rate_R * R)
+      dR <- (gamma * total_inf) - (waning_rate_R * R)
       
       new_severe_cases <- (delta * E_0 * severity_0) + (delta * E_V_1 * severity_V_1) + (delta * E_V_2 * severity_V_2) + (delta * E_V_3 * severity_V_3) + (delta * E_V_4 * severity_V_4) + (delta * E_1 * severity_1) + (delta * E_2 * severity_2) + (delta * E_3 * severity_3) + (delta * E_4 * severity_4)
         

@@ -36,7 +36,7 @@ starting_params <- c(severity_0_17 = 0.0001,
 # Reading model scripts
 source(here::here("seir-model.R"))
 source(here::here("model-pop-init.R"))
-source(here::here("mcmc-calibration-functions.R"))
+source(here::here("mcmc-calibration-functions-no-priors.R"))
 
 #Simulation vars
 time <- seq(0, 494, by=1) # Number of days. (Jan 1, 2022 - May 10, 2023)
@@ -60,7 +60,7 @@ chain = run_metropolis_MCMC(starting_params, sim_size)
 dir.create("simulation-results")
 
 #Save results
-write.csv(chain, "simulation-results/mcmc-chain-10000sims.csv")
+write.csv(chain, "simulation-results/mcmc-chain-10000sims-no-priors-no-adj.csv")
 
 # params["beta"] <- chain[sim_size, 2]
 # params["gamma"] <- chain[sim_size, 1]

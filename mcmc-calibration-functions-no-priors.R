@@ -23,6 +23,8 @@ prediction <- function (initial_conditions, params, contact_matrix_adj) {
     select(-c(new_severe_cases1:new_severe_cases5))
 
   return(reformatted_results)
+  #return(results)
+  
 }
 
 
@@ -125,13 +127,16 @@ proposalfunction <- function(param){
 run_metropolis_MCMC <- function(startvalue, iterations){
   chain = array(dim = c(iterations+1,9))
   chain[1,] = c(startvalue, posterior(proposalfunction(startvalue)))
-  print(startvalue)
-  for (i in 1:iterations){
+
+    for (i in 1:iterations){
     proposal = proposalfunction(chain[i,1:8])
     print("Proposal: ")
     print(proposal)
     
-    probab = exp(posterior(proposal) - posterior(chain[i,1:8]))
+    posterior_proposal <- posterior(proposal)
+    posterior_current <- chain[i,9]
+    
+    probab = min(exp(posterior_proposal - posterior_current), 1) - 0.7
     random_probab <- runif(1)
     
     # print(paste0("Probability: ", probab))
@@ -139,11 +144,11 @@ run_metropolis_MCMC <- function(startvalue, iterations){
     
     if (random_probab < probab){
       chain[i+1,1:8] <- proposal
-      chain[i+1,9] <- posterior(proposal)
+      chain[i+1,9] <- posterior_proposal
       
     }else{
       chain[i+1,1:8] <- chain[i, 1:8]
-      chain[i+1,9] <- posterior(chain[i, 1:8])
+      chain[i+1,9] <- posterior_current
     }
     
     print(paste0("Iteration ", i, " Chain: "))
